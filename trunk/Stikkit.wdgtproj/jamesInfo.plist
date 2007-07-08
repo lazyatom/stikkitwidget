@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentSplitViewGeometry</key>
+	<dict>
+		<key>ContentSplitViewConfig</key>
+		<integer>8</integer>
+		<key>SplitViewConfig</key>
+		<integer>3</integer>
+		<key>_collapsingFrameDimension</key>
+		<real>0.0</real>
+		<key>_indexOfCollapsedView</key>
+		<integer>0</integer>
+		<key>_percentageOfCollapsedView</key>
+		<real>0.0</real>
+		<key>sizes</key>
+		<array>
+			<string>{{0, 0}, {1134, 374}}</string>
+			<string>{{0, 384}, {1134, 401}}</string>
+		</array>
+	</dict>
+	<key>ContentViewType</key>
+	<integer>0</integer>
+	<key>Dashboard Widget Prefs</key>
+	<dict>
+		<key>id</key>
+		<string>33c18030d785a741</string>
+		<key>in-layer</key>
+		<true/>
+		<key>path</key>
+		<string>/private/tmp/Dashcode/.Stikkit.wdgtprojlsM9YL/Stikkit.wdgtproj/project.wdgt/</string>
+		<key>percent-offset-x</key>
+		<integer>0</integer>
+		<key>percent-offset-y</key>
+		<integer>0</integer>
+		<key>percent-type</key>
+		<integer>3</integer>
+		<key>percent-x</key>
+		<real>0.3611111044883728</real>
+		<key>percent-y</key>
+		<real>0.30000001192092896</real>
+		<key>pos-x</key>
+		<integer>520</integer>
+		<key>pos-y</key>
+		<integer>270</integer>
+		<key>rosetta</key>
+		<false/>
+	</dict>
+	<key>MainSplitViewGeometry</key>
+	<dict>
+		<key>_collapsingFrameDimension</key>
+		<real>0.0</real>
+		<key>_indexOfCollapsedView</key>
+		<integer>0</integer>
+		<key>_percentageOfCollapsedView</key>
+		<real>0.0</real>
+		<key>sizes</key>
+		<array>
+			<string>{{0, 0}, {242, 806}}</string>
+			<string>{{243, 0}, {1135, 806}}</string>
+		</array>
+	</dict>
+	<key>MainWindowFrame</key>
+	<string>-4 51 1377 827 0 0 1440 878 </string>
+	<key>NavigatorSplitViewGeometry</key>
+	<dict>
+		<key>ContentSplitViewConfig</key>
+		<integer>9</integer>
+		<key>SplitViewConfig</key>
+		<integer>1</integer>
+		<key>_collapsingFrameDimension</key>
+		<real>0.0</real>
+		<key>_indexOfCollapsedView</key>
+		<integer>0</integer>
+		<key>_percentageOfCollapsedView</key>
+		<real>0.0</real>
+		<key>sizes</key>
+		<array>
+			<string>{{0, 0}, {245, 398}}</string>
+			<string>{{0, 408}, {245, 377}}</string>
+		</array>
+	</dict>
+	<key>Objects view expanded items</key>
+	<array>
+		<array>
+			<integer>0</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+			<integer>7</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+			<integer>8</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+			<integer>5</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+			<integer>6</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+			<integer>9</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>1</integer>
+		</array>
+		<array>
+			<integer>0</integer>
+			<integer>1</integer>
+			<integer>8</integer>
+		</array>
+	</array>
+	<key>Objects view last selections</key>
+	<array>
+		<array>
+			<integer>0</integer>
+			<integer>0</integer>
+		</array>
+	</array>
+	<key>Opened Steps</key>
+	<array>
+		<integer>2</integer>
+	</array>
+</dict>
+</plist>
