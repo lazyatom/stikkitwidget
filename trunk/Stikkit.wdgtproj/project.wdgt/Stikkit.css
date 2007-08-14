@@ -235,9 +235,9 @@ span.auto_sync_label {
 	position: absolute;
 	z-index: 1;
 	height: 24px;
-	width: 298px;
-	top: 175px;
-	left: 51px;
+	width: 185px;
+	left: 107px;
+	top: 183px;
 }
 
 #sync_delay {

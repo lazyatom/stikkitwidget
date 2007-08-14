@@ -25,25 +25,25 @@
 	<key>Dashboard Widget Prefs</key>
 	<dict>
 		<key>id</key>
-		<string>33c18030d785a741</string>
+		<string>c91c53a0bae4a841</string>
 		<key>in-layer</key>
 		<true/>
 		<key>path</key>
-		<string>/private/tmp/Dashcode/.Stikkit.wdgtprojlsM9YL/Stikkit.wdgtproj/project.wdgt/</string>
+		<string>/private/tmp/Dashcode/.Stikkit.wdgtproj3BW2Qf/Stikkit.wdgtproj/project.wdgt/</string>
 		<key>percent-offset-x</key>
 		<integer>0</integer>
 		<key>percent-offset-y</key>
 		<integer>0</integer>
 		<key>percent-type</key>
-		<integer>3</integer>
+		<integer>2</integer>
 		<key>percent-x</key>
-		<real>0.3611111044883728</real>
+		<real>0.05416666716337204</real>
 		<key>percent-y</key>
-		<real>0.30000001192092896</real>
+		<real>0.054444443434476852</real>
 		<key>pos-x</key>
-		<integer>520</integer>
+		<integer>962</integer>
 		<key>pos-y</key>
-		<integer>270</integer>
+		<integer>49</integer>
 		<key>rosetta</key>
 		<false/>
 	</dict>
@@ -66,9 +66,9 @@
 	<key>NavigatorSplitViewGeometry</key>
 	<dict>
 		<key>ContentSplitViewConfig</key>
-		<integer>9</integer>
+		<integer>5</integer>
 		<key>SplitViewConfig</key>
-		<integer>1</integer>
+		<integer>3</integer>
 		<key>_collapsingFrameDimension</key>
 		<real>0.0</real>
 		<key>_indexOfCollapsedView</key>
@@ -77,8 +77,8 @@
 		<real>0.0</real>
 		<key>sizes</key>
 		<array>
-			<string>{{0, 0}, {245, 398}}</string>
-			<string>{{0, 408}, {245, 377}}</string>
+			<string>{{0, 0}, {244, 398}}</string>
+			<string>{{0, 408}, {244, 377}}</string>
 		</array>
 	</dict>
 	<key>Objects view expanded items</key>
@@ -128,7 +128,6 @@
 	<key>Objects view last selections</key>
 	<array>
 		<array>
-			<integer>0</integer>
 			<integer>0</integer>
 		</array>
 	</array>
