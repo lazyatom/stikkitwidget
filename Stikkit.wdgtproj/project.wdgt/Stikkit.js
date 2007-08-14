@@ -5,7 +5,7 @@ Here's a quick effort at a Stikkit widget for Mac OS X. If you find any bugs or 
 please send 'em on to me at james@lazyatom.com.
 */
 
-var current_version = "v0.8";
+var current_version = "v0.8.1";
 
 // references to some of our controls.
 var stikkit_select;
@@ -29,6 +29,8 @@ var Stikkit = {
 	successfully_created: [],
 	
 	current: null,
+	
+	auto_sync: false,
 		
 	//show_on_load: true,
 
@@ -98,6 +100,7 @@ var Stikkit = {
 	search: function(event) {
 		this.storeCurrentStikkitChange();
 		this.current = null;
+		this.is_searching = true;
 		this.getStikkits();
 	},
 
@@ -117,12 +120,28 @@ var Stikkit = {
 			removeFromArray(Stikkit.new_stikkits, this.successfully_created[i]);
 		}
 	},
+	
+	api_key_set: function() {
+		alert("api key: " + this.api_key);
+		return (this.api_key != null && this.api_key != undefined && this.api_key != "");
+	},
 		
 	sync: function() {
+		if (!this.api_key_set()) {
+			setStatus("API Key?");
+			return;
+		}
 		setStatus("Sync starting...");
 		this.storeCurrentStikkitChange();
 		this.createNewStikkits();
-		this.loadFromServer("", function(server_stikkits) {
+
+		var options = "";
+		var search_text = search_field.value;
+		if (search_text != null && search_text != "") { 
+			options = "&name=" + search_text;
+		}
+
+		this.loadFromServer(options, function(server_stikkits) {
 			var original_stikkits = Stikkit.stikkits;
 			Stikkit.stikkits = server_stikkits;
 			setStatus("Merging changes...");
@@ -268,7 +287,9 @@ var Stikkit = {
 				stikkit_text.value = stikkit.text;
 			}
 		}
-		stikkit_text.focus();		
+		if (!this.is_searching) {
+			stikkit_text.focus();
+		}
 	},
 	
 	is_edited: function(stikkit) {
@@ -304,6 +325,14 @@ var Stikkit = {
 
 	stikkitsFound: function() {
 		stikkit_text.disabled = false;
+	},
+	
+	editingStikkit: function() {
+		this.is_searching = false;
+	},
+	
+	searchingStikkits: function() {
+		this.is_searching = true;
 	}
 }
 
@@ -383,25 +412,34 @@ function savePreferences() {
 	var api_key = document.getElementById("api_key").value;
 	if (Stikkit.api_key != api_key) { // the key was set or changed
 		widget.setPreferenceForKey(api_key, "stikkit_api_key");
+		Stikkit.api_key = api_key;
 		// reload the stikkits
 		Stikkit.getStikkits();
 	}
 	widget.setPreferenceForKey(auto_sync.checked, "stikkit_auto_sync");
-	widget.setPreferenceForKey(document.getElementById("sync_delay").value, "stikkit_sync_delay");
+	Stikkit.auto_sync = auto_sync.checked;
 }
 
 function loadPreferences() {
 	// put the API key into the field
 	if (widget.preferenceForKey("stikkit_api_key") != undefined) {
+		Stikkit.api_key = widget.preferenceForKey("stikkit_api_key");
 		document.getElementById("api_key").value = Stikkit.api_key;
 	}
 	if (widget.preferenceForKey("stikkit_auto_sync") != undefined) {
 		auto_sync.checked = widget.preferenceForKey("stikkit_auto_sync");
-	}
-	if (widget.preferenceForKey("stikkit_sync_delay") != undefined) {
-		document.getElementById("sync_delay").value = widget.preferenceForKey("stikkit_sync_delay");
+		Stikkit.auto_sync = auto_sync.checked;
 	}
 }
+
+function clearPreferences() {
+	widget.setPreferenceForKey(null, "stikkit_auto_sync");
+	widget.setPreferenceForKey(null, "stikkit_api_key");
+}
+
+
+/* Here are the functions that Dashboard itself calls when it works with the widget */
+
 
 function load()
 {
@@ -413,7 +451,7 @@ function load()
 	stikkit_select = document.getElementById("stikkit_select");
 	search_field = document.getElementById("searchfield");
 	auto_sync = document.getElementById("auto_sync");
-	
+		
 	document.getElementById("version_label").innerHTML = current_version;
 	
 	loadPreferences();
@@ -423,30 +461,21 @@ function load()
 
 function remove()
 {
-	// your widget has just been removed from the layer
-	// remove any preferences as needed
-	// widget.setPreferenceForKey(null, createInstancePreferenceKey("your-key"));
 }
 
 function hide()
 {
-	// your widget has just been hidden stop any timers to
-	// prevent cpu usage
 }
 
 function show()
 {
-	// your widget has just been shown.  restart any timers
-	// and adjust your interface as needed
-    if (Stikkit.api_key == undefined) {
-		setStatus("API Key?");
-	}
+	if (Stikkit.auto_sync)
+		Stikkit.sync();
 }
 
+/* When flipping the widget over to show the back */
 function showBack(event)
 {
-	// your widget needs to show the back
-
 	var front = document.getElementById("front");
 	var back = document.getElementById("back");
 
@@ -462,17 +491,13 @@ function showBack(event)
 		setTimeout('widget.performTransition();', 0);
 }
 
+/* Once we're done with the back of the widget */
 function showFront(event)
 {
-	// your widget needs to show the front
-
 	var front = document.getElementById("front");
 	var back = document.getElementById("back");
 
 	savePreferences();
-
-	if (auto_sync.checked)
-		setTimeout('sync();', sync_delay());
 	
 	if (window.widget)
 		widget.prepareForTransition("ToFront");
