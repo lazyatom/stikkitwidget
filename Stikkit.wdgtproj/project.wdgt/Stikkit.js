@@ -1,8 +1,9 @@
 /* Copyright (c) James Adam, 2007
-You can use and modify this code in any way, as long as you attribute the original version to myself.
+   See MIT_LICENSE for further details, all you legal types.
+   Essentially, you can use and modify this code in any way, as long as you attribute the original version to myself.
 
-Here's a quick effort at a Stikkit widget for Mac OS X. If you find any bugs or have suggestions,
-please send 'em on to me at james@lazyatom.com.
+   Here's a quick effort at a Stikkit widget for Mac OS X. If you find any bugs or have suggestions,
+   please send 'em on to me at james@lazyatom.com.
 */
 
 var current_version = "v0.8.1";
@@ -16,12 +17,30 @@ var status_text;
 var auto_sync;
 var sync_delay;
 
+function Stikkit(attributes) {
+  this.end = attributes.end;
+  this.text = attributes.text;
+  this.completed = attributes.complete;
+  this.name = attributes.name;
+  this.updated = attributes.updated;
+  this.start = attributes.start;
+  this.created = attributes.created;
+  this.start_timezone = attributes.start_timezone;
+  this.url = attributes.url;
+  this.end_timezone = attributes.end_timezone;
+  this.id = attributes.id;
+  this.tags = attributes.tags;
+  
+  this.original_text = attributes.text;
+  this.has_changed = false;
+  this.is_new = false;
+};
 
 // global connection reference. because I'm *not* shit hot at Javascript, alas,
 // and all the callback madness gets messy.
 var conn;
 
-var Stikkit = {
+var StikkitManager = {
 
 	stikkits: [],
 	
@@ -31,16 +50,12 @@ var Stikkit = {
 	current: null,
 	
 	auto_sync: false,
-		
-	//show_on_load: true,
-
-	api_key: widget.preferenceForKey("stikkit_api_key"),
-
+	
 	request: function(method, resource, options, callback) {
 		conn = new XMLHttpRequest();
 		url = "http://api.stikkit.com/";
 		url += resource + ".json";
-		url += "?api_key=" + this.api_key;
+		url += "?api_key=" + this.api_key();
 		var http_method = method;
 		var async = true;
 		if (method == "PUT") {
@@ -78,21 +93,17 @@ var Stikkit = {
 	
 	getStikkits: function() {
 		alert("getting stikkits");
-		//var message = "";
 		var options = "";
 		
 		var search_text = search_field.value;
 		if (search_text != null && search_text != "") { 
-			//message = "Searching Stikkits...";
 			options = "&name=" + search_text;
-		} //else { 
-		//	message = "Loading Stikkits...";
-		//}
+		}
     
 		this.loadFromServer(options, function(server_stikkits){
-			Stikkit.stikkits = server_stikkits;
+			StikkitManager.stikkits = server_stikkits;
 			setStatus("", false);
-			Stikkit.updateDisplay();
+			StikkitManager.updateDisplay();
 		});
 		return true;
 	},
@@ -117,17 +128,12 @@ var Stikkit = {
 		   this.create(this.new_stikkits[i]);
 		}
 		for(var i = 0; i < this.successfully_created.length; i++) {
-			removeFromArray(Stikkit.new_stikkits, this.successfully_created[i]);
+			removeFromArray(StikkitManager.new_stikkits, this.successfully_created[i]);
 		}
 	},
 	
-	api_key_set: function() {
-		alert("api key: " + this.api_key);
-		return (this.api_key != null && this.api_key != undefined && this.api_key != "");
-	},
-		
 	sync: function() {
-		if (!this.api_key_set()) {
+		if (!this.is_api_key_set()) {
 			setStatus("API Key?");
 			return;
 		}
@@ -142,36 +148,36 @@ var Stikkit = {
 		}
 
 		this.loadFromServer(options, function(server_stikkits) {
-			var original_stikkits = Stikkit.stikkits;
-			Stikkit.stikkits = server_stikkits;
+			var original_stikkits = StikkitManager.stikkits;
+			StikkitManager.stikkits = server_stikkits;
 			setStatus("Merging changes...");
-			for (var i = 0; i < Stikkit.stikkits.length; i++) {
+			for (var i = 0; i < StikkitManager.stikkits.length; i++) {
 				// compare the downloaded stikkit to our old copy.
 				var server_stikkit = server_stikkits[i];
-				var original_stikkit = Stikkit.by_id(server_stikkit.id, original_stikkits);
+				var original_stikkit = StikkitManager.by_id(server_stikkit.id, original_stikkits);
 				if (original_stikkit != null) { // i.e., it exists
 					if (original_stikkit.text != server_stikkit.text) { // it was changed on the server
 						// ??? do nothing, the server copy is used
 					} else if ((original_stikkit.new_text != undefined) && (original_stikkit.new_text != server_stikkit.text)) { // it was edited locally
 						// update the new server-retrieved stikkit with the new text
 						alert("stikkit " + original_stikkit.id + " was changed. sending to server.");
-						Stikkit.save(server_stikkit.id, original_stikkit.new_text);
+						StikkitManager.save(server_stikkit.id, original_stikkit.new_text);
 						server_stikkit.text = original_stikkit.new_text;
 				   }
 				}
 			}
 			save_button.className = "apple-no-children";			
 			setStatus("Sync complete.");
-			if (Stikkit.current != null) {
-				var current_from_server = Stikkit.by_id(Stikkit.current.id, Stikkit.stikkits);
+			if (StikkitManager.current != null) {
+				var current_from_server = StikkitManager.by_id(StikkitManager.current.id, StikkitManager.stikkits);
 				if (current_from_server != null) {
 					//current_from_server['new_text'] = stikkit_text.value;
-					Stikkit.show(current_from_server); // in case it changed on the server.
+					StikkitManager.show(current_from_server); // in case it changed on the server.
 				} else {
-					Stikkit.show(Stikkit.stikkits[0]); // if it was deleted.
+					StikkitManager.show(StikkitManager.stikkits[0]); // if it was deleted.
 				}
 			}
-			Stikkit.updateDisplay();		
+			StikkitManager.updateDisplay();		
 		});
 	},
 	
@@ -192,7 +198,7 @@ var Stikkit = {
 		var options =  "raw_text=" + encodeURIComponent(new_stikkit.new_text);
 		this.request("POST", "stikkits", options, function() {
 			if (conn.readyState == 4) {
-				Stikkit.successfully_created.push(new_stikkit);
+				StikkitManager.successfully_created.push(new_stikkit);
 			}		
 		});
 	},
@@ -204,7 +210,7 @@ var Stikkit = {
 				//setStatus("Saving...", true);
 			} else if (conn.readyState == 4) {
 				//setStatus("Saved.", false);
-				//Stikkit.getStikkits();
+				//StikkitManager.getStikkits();
 			}		
 		});	
 	},
@@ -214,32 +220,32 @@ var Stikkit = {
 	},
 	
 	_delete: function(stikkit) {
-		Stikkit.request("DELETE", "stikkits/"+stikkit.id, "", function() {
+		StikkitManager.request("DELETE", "stikkits/"+stikkit.id, "", function() {
 			if (conn.readyState == 1) {
 				setStatus("Deleting " + stikkit.id + "...", true);
 			} else if (conn.readyState == 4) {
 				setStatus("Deleted.", false);
-				if (stikkit == Stikkit.current) { 
+				if (stikkit == StikkitManager.current) { 
 					// remove our reference to it so it's not hanging around when we resync
-					Stikkit.current = null;
+					StikkitManager.current = null;
 				}
-				Stikkit.sync();
+				StikkitManager.sync();
 			}		
 		});	
 	},
 	
 	updateDisplay: function() {
-		if (Stikkit.stikkits.length == 0) {
+		if (StikkitManager.stikkits.length == 0) {
 			this.noStikkitsFound();
 		} else {
 			this.stikkitsFound();
-			if (Stikkit.current == null) {
+			if (StikkitManager.current == null) {
 				this.show(this.stikkits[0]);
 			}
-			//alert("stikkit changed: " + stikkitChanged() + ", show on load: " + Stikkit.show_on_load);
-			//if (Stikkit.show_on_load || (!Stikkit.is_new() && !stikkitChanged())) {
-			//	Stikkit.show(Stikkit.stikkits[0]);	
-			//	Stikkit.show_on_load = false;			
+			//alert("stikkit changed: " + stikkitChanged() + ", show on load: " + StikkitManager.show_on_load);
+			//if (StikkitManager.show_on_load || (!StikkitManager.is_new() && !stikkitChanged())) {
+			//	StikkitManager.show(StikkitManager.stikkits[0]);	
+			//	StikkitManager.show_on_load = false;			
 			//}
 		}	
 		this.updateSelect();
@@ -310,8 +316,8 @@ var Stikkit = {
 	},
 	
 	openCurrentInBrowser: function(event) {
-		if (Stikkit.current != null) {
-			widget.openURL("http://stikkit.com/stikkits/" + Stikkit.current.id);
+		if (StikkitManager.current != null) {
+			widget.openURL("http://stikkit.com/stikkits/" + StikkitManager.current.id);
 		}
 	},
 
@@ -333,7 +339,16 @@ var Stikkit = {
 	
 	searchingStikkits: function() {
 		this.is_searching = true;
-	}
+	},
+	
+	api_key: function() {
+		return widget.preferenceForKey("stikkit_api_key");
+	},
+	
+	is_api_key_set: function() {
+		alert("api key: " + this.api_key());
+		return (this.api_key() != null && this.api_key() != undefined && this.api_key() != "");
+	}	
 }
 
 
@@ -355,31 +370,31 @@ function setStatus(text, busy) {
 }
 
 function changeStikkit(event) {
-	Stikkit.storeCurrentStikkitChange();
-	if (stikkit_select.selectedIndex >= Stikkit.stikkits.length) {
-		Stikkit.show(Stikkit.new_stikkits[stikkit_select.selectedIndex - Stikkit.stikkits.length]);
+	StikkitManager.storeCurrentStikkitChange();
+	if (stikkit_select.selectedIndex >= StikkitManager.stikkits.length) {
+		StikkitManager.show(StikkitManager.new_stikkits[stikkit_select.selectedIndex - StikkitManager.stikkits.length]);
 	} else {
-		Stikkit.show(Stikkit.stikkits[stikkit_select.selectedIndex]);
+		StikkitManager.show(StikkitManager.stikkits[stikkit_select.selectedIndex]);
 	}
 }
 
 function stikkitChanged() {
-  return (!Stikkit.is_new() && (Stikkit.current.text != stikkit_text.value));
+  return (!StikkitManager.is_new() && (StikkitManager.current.text != stikkit_text.value));
 }
 
 function sync() {
-	Stikkit.sync();
+	StikkitManager.sync();
 	if (auto_sync.checked)
 		setTimeout('sync();', sync_delay());
 }
 
 function deleteOrCancelStikkit(event) {
-    if (Stikkit.is_new()) {
-		removeFromArray(Stikkit.new_stikkits, Stikkit.current);
-		Stikkit.show(Stikkit.stikkits[0]);
-		Stikkit.updateDisplay();
+    if (StikkitManager.is_new()) {
+		removeFromArray(StikkitManager.new_stikkits, StikkitManager.current);
+		StikkitManager.show(StikkitManager.stikkits[0]);
+		StikkitManager.updateDisplay();
 	} else {
-		Stikkit.deleteCurrent();
+		StikkitManager.deleteCurrent();
 	}
 }
 
@@ -410,25 +425,23 @@ function randomizeCredits() {
 
 function savePreferences() {
 	var api_key = document.getElementById("api_key").value;
-	if (Stikkit.api_key != api_key) { // the key was set or changed
+	if (StikkitManager.api_key() != api_key) { // the key was set or changed
 		widget.setPreferenceForKey(api_key, "stikkit_api_key");
-		Stikkit.api_key = api_key;
 		// reload the stikkits
-		Stikkit.getStikkits();
+		StikkitManager.getStikkits();
 	}
 	widget.setPreferenceForKey(auto_sync.checked, "stikkit_auto_sync");
-	Stikkit.auto_sync = auto_sync.checked;
+	StikkitManager.auto_sync = auto_sync.checked;
 }
 
 function loadPreferences() {
 	// put the API key into the field
-	if (widget.preferenceForKey("stikkit_api_key") != undefined) {
-		Stikkit.api_key = widget.preferenceForKey("stikkit_api_key");
-		document.getElementById("api_key").value = Stikkit.api_key;
+	if (StikkitManager.is_api_key_set()) {
+		document.getElementById("api_key").value = StikkitManager.api_key();
 	}
 	if (widget.preferenceForKey("stikkit_auto_sync") != undefined) {
 		auto_sync.checked = widget.preferenceForKey("stikkit_auto_sync");
-		Stikkit.auto_sync = auto_sync.checked;
+		StikkitManager.auto_sync = auto_sync.checked;
 	}
 }
 
@@ -456,7 +469,7 @@ function load()
 	
 	loadPreferences();
 	
-	Stikkit.sync();	
+	StikkitManager.sync();	
 }
 
 function remove()
@@ -469,8 +482,8 @@ function hide()
 
 function show()
 {
-	if (Stikkit.auto_sync)
-		Stikkit.sync();
+	if (StikkitManager.auto_sync)
+		StikkitManager.sync();
 }
 
 /* When flipping the widget over to show the back */

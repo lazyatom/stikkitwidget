@@ -16,8 +16,8 @@
 		<real>0.0</real>
 		<key>sizes</key>
 		<array>
-			<string>{{0, 0}, {1134, 374}}</string>
-			<string>{{0, 384}, {1134, 401}}</string>
+			<string>{{0, 0}, {1134, 395}}</string>
+			<string>{{0, 405}, {1134, 380}}</string>
 		</array>
 	</dict>
 	<key>ContentViewType</key>
@@ -25,11 +25,11 @@
 	<key>Dashboard Widget Prefs</key>
 	<dict>
 		<key>id</key>
-		<string>c91c53a0bae4a841</string>
+		<string>22c6db08d1e4a841</string>
 		<key>in-layer</key>
 		<true/>
 		<key>path</key>
-		<string>/private/tmp/Dashcode/.Stikkit.wdgtproj3BW2Qf/Stikkit.wdgtproj/project.wdgt/</string>
+		<string>/private/tmp/Dashcode/.Stikkit.wdgtprojTQPBUf/Stikkit.wdgtproj/project.wdgt/</string>
 		<key>percent-offset-x</key>
 		<integer>0</integer>
 		<key>percent-offset-y</key>
@@ -37,13 +37,13 @@
 		<key>percent-type</key>
 		<integer>2</integer>
 		<key>percent-x</key>
-		<real>0.05416666716337204</real>
+		<real>0.11249999701976776</real>
 		<key>percent-y</key>
-		<real>0.054444443434476852</real>
+		<real>0.05000000074505806</real>
 		<key>pos-x</key>
-		<integer>962</integer>
+		<integer>878</integer>
 		<key>pos-y</key>
-		<integer>49</integer>
+		<integer>45</integer>
 		<key>rosetta</key>
 		<false/>
 	</dict>

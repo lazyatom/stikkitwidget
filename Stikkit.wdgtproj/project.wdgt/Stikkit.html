@@ -39,12 +39,12 @@
 		
 		</a>
 		
-		<input type="search" value="" placeholder="" results="10" incremental="incremental" id="searchfield" onfocus="Stikkit.searchingStikkits();" onsearch="Stikkit.search(event);">
+		<input type="search" value="" placeholder="" results="10" incremental="incremental" id="searchfield" onfocus="StikkitManager.searchingStikkits();" onsearch="StikkitManager.search(event);">
 		
-		<textarea id="stikkit_text" onfocus="Stikkit.editingStikkit();"></textarea>
+		<textarea id="stikkit_text" onfocus="StikkitManager.editingStikkit();"></textarea>
 		
 		<div id="save_button" style=""></div>
-		<div id="status_text" apple-text-overflow="ellipsis" onclick="Stikkit.openCurrentInBrowser(event);"></div>
+		<div id="status_text" apple-text-overflow="ellipsis" onclick="StikkitManager.openCurrentInBrowser(event);"></div>
 		
 		<div id="stikkit_button" style="display: none;"></div>
 		
