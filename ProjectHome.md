@@ -1,0 +1,1 @@
+This simple widget provides a quick and easy way to throw notes into Stikkit without getting in the way of your current task. It also features rudimentary offline syncing too, which means you can still "stik" things when your connection isn't active.
